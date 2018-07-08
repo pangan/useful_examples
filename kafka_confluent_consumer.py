@@ -1,4 +1,4 @@
-from confluent_kafka import Consumer, KafkaError
+from confluent_kafka import Consumer, KafkaError, OFFSET_BEGINNING
 
 def amir_commit(b, c):
 
@@ -9,14 +9,19 @@ def read_kafka():
     c = Consumer({
         'bootstrap.servers': 'amir-dev.dev.op5.com',
         'group.id': 'mygroup3',
-        'client.id': 'client-2',
+        'client.id': 'client-1',
         'enable.auto.commit': True,
         'session.timeout.ms': 6000,
-        'default.topic.config': {'auto.offset.reset': 'beginning'}
+        'default.topic.config': {'auto.offset.reset': 'smallest'}
     })
 
+    def my_assign(consumer, partitions):
+        for p in partitions:
+            p.offset = OFFSET_BEGINNING
+        print('assign', partitions)
+        consumer.assign(partitions)
 
-    c.subscribe(['amir-topic-1'])
+    c.subscribe(['amir-topic-1'], on_assign=my_assign)
 
     try:
         while True:
