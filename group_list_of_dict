@@ -1,0 +1,16 @@
+import itertools
+
+my_list = [{'topic': 't2', 'value': 4, 'other': 'text1'},
+           {'topic': 't1', 'value': 2, 'other': 'text2'},
+           {'topic': 't2', 'value': 3, 'other': 'text3'}]
+
+
+uniquekeys = []
+newlist = sorted(my_list, key=lambda k: (k['topic'], k['value']))
+keyfunc = lambda x: x['topic']
+for k, g in itertools.groupby(newlist, keyfunc):
+    a = list(g)
+    max_val = max(a, key=lambda k: k['value'])
+    uniquekeys.append(max_val)
+
+print (uniquekeys)
