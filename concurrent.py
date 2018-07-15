@@ -15,10 +15,6 @@ def m1():
         if st:
             break
 
-def m2():
-    while True:
-        print ("good")
-
 
 executor = ThreadPoolExecutor(max_workers=1)
 executor.submit(m1)
