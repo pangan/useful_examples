@@ -7,11 +7,11 @@ def do_loop():
         print('.'),
 
 
-def goodbye(a , b):
+def goodbye(signum, frame):
     
     print("Terminating", end='')
     
-    #sys.stdout.write('Terminated by: {0}'.format(a))
+    #sys.stdout.write('Terminated by: {0}'.format(signum))
     sys.exit(0)
 
 if __name__ == '__main__':
