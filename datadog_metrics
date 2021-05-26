@@ -1,0 +1,37 @@
+from datadog import initialize, statsd
+
+
+class DatadogMetrics(object):
+    def __init__(self, datadog_settings):
+        self.default_tags = {
+            "env": datadog_settings["environment"],   # any string
+            "service": datadog_settings["service_name"],   # name of service
+        }
+
+        options = {
+            "statsd_host": datadog_settings["host"],    # datadog agent server in house
+            "statsd_port": datadog_settings["statsd_port"],   # datadog agent port
+        }
+
+        initialize(**options)
+
+    @staticmethod
+    def _build_datadog_tags(tags):
+        return [f"{key}:{value}" for key, value in tags.items()]
+
+    def statsd_histogram(self, metric_name, duration, tags):
+        all_tags = {**self.default_tags, **tags}
+        statsd.histogram(metric_name, duration, tags=self._build_datadog_tags(all_tags))
+
+    def statsd_increment(self, metric_name, count, tags):
+        all_tags = {**self.default_tags, **tags}
+        statsd.increment(metric_name, count, tags=self._build_datadog_tags(all_tags))
+
+
+datadog_settings = {
+    "host": DATADOG_HOST,
+    "statsd_port": STATSD_PORT,
+    "environment": ENVIRONMENT,
+    "service_name": "foo",
+}
+datadog_client = DatadogMetrics(datadog_settings)
